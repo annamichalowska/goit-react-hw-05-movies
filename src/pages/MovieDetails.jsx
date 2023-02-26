@@ -29,6 +29,7 @@ function MovieDetails({ movie }) {
         <h3>Overview</h3>
         <p>{movie.overview}</p>
         <h3>Genres</h3>
+        {/* NIE DZIAŁA */}
         {/* <p>Genres: {movie.genres.map(genre => genre.name).join(' ')}</p> */}
       </div>
       <div>
