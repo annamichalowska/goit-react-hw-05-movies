@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 const API_KEY = '5fcd4365d493d0f97c8c4d9a62c7577d';
 const API_URL = 'https://api.themoviedb.org/3/search/movie';
 
-function Movies() {
+export const Movies = () => {
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -45,6 +45,4 @@ function Movies() {
       )}
     </div>
   );
-}
-
-export default Movies;
+};

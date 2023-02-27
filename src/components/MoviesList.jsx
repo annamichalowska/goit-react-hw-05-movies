@@ -7,7 +7,16 @@ function MoviesList({ movies, onMovieClick }) {
     <ul>
       {movies.map(movie => (
         <li key={movie.id} onClick={() => onMovieClick(movie)}>
-          <Link to={`/${movie.id}`} state={{ location }}>
+          <Link
+            to={{
+              pathname: `/${movie.id}`,
+              state: {
+                from: {
+                  location,
+                },
+              },
+            }}
+          >
             {movie.title}
           </Link>
         </li>

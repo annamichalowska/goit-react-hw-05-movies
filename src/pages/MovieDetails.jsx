@@ -1,10 +1,9 @@
-import { Link, Outlet } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { BackLink } from '../components/BackLink';
 
 function MovieDetails({ movie }) {
   const location = useLocation();
-  const backLinkHref = location.state?.from ?? '/Movies';
+  const backLinkHref = location.state?.from ?? '/movies/';
 
   if (!movie) {
     return <p>Please select a movie.</p>;
@@ -30,16 +29,38 @@ function MovieDetails({ movie }) {
         <p>{movie.overview}</p>
         <h3>Genres</h3>
         {/* NIE DZIAŁA */}
-        <p>{movie.genres.map(genre => genre.name).join(' ')}</p>
+        {/* <p>{movie.genres.map(genre => genre.name).join(' ')}</p> */}
       </div>
       <div>
         <p>Additional information</p>
         <ul>
           <li>
-            <Link to="cast">Cast</Link>
+            <Link
+              to={{
+                pathname: `/${movie.id}/cast`,
+                state: {
+                  from: {
+                    location,
+                  },
+                },
+              }}
+            >
+              Cast
+            </Link>
           </li>
           <li>
-            <Link to="reviews">Reviews</Link>
+            <Link
+              to={{
+                pathname: `/${movie.id}/reviews`,
+                state: {
+                  from: {
+                    location,
+                  },
+                },
+              }}
+            >
+              Reviews
+            </Link>
           </li>
         </ul>
       </div>
