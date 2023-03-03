@@ -1,63 +1,61 @@
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import { BackLink } from '../components/BackLink';
+import { useState, useEffect } from 'react';
+import { getMovieDetails, IMAGE_URL } from 'components/fetchAPI';
 
-function MovieDetails({ movie }) {
+function MovieDetails() {
   const location = useLocation();
   const backLinkHref = location.state?.from ?? '/movies/';
+  const [movie, setMovie] = useState(null);
+  const { movieId } = useParams();
 
-  if (!movie) {
-    return <p>Please select a movie.</p>;
-  }
+  useEffect(() => {
+    const getMovie = async () => {
+      const currentMovie = await getMovieDetails(movieId);
+
+      setMovie(currentMovie);
+    };
+
+    getMovie();
+  }, [movieId]);
 
   return (
     <div>
-      <BackLink to={backLinkHref}>Back to movie list</BackLink>
-      <div>
-        <img
-          width={150}
-          height={220}
-          src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-          alt={movie.title}
-        />
-      </div>
-      <div>
-        <h1>
-          {movie.title} ({movie.release_date.slice(0, 4)})
-        </h1>
-        <p>User score: {movie.vote_average * 10}%</p>
-        <h3>Overview</h3>
-        <p>{movie.overview}</p>
-        <h3>Genres</h3>
-        {/* NIE DZIAŁA */}
-        {/* <p>{movie.genres.map(genre => genre.name).join(' ')}</p> */}
-      </div>
+      {!movie ? (
+        <div>This movie is not found</div>
+      ) : (
+        <>
+          <BackLink to={backLinkHref}>Back to movie list</BackLink>
+          <div>
+            <img
+              src={IMAGE_URL + movie.poster_path}
+              alt={movie.title}
+              width={150}
+              height={220}
+            />
+          </div>
+          <div>
+            <h1>
+              {movie.title} ({movie.release_date.slice(0, 4)})
+            </h1>
+            <p>User score: {movie.vote_average * 10}%</p>
+            <h3>Overview</h3>
+            <p>{movie.overview}</p>
+            <h3>Genres</h3>
+            <p>{`${movie.genres.map(genre => genre.name).join(', ')}`}</p>
+          </div>
+        </>
+      )}
+
       <div>
         <p>Additional information</p>
         <ul>
           <li>
-            <Link
-              to={{
-                pathname: `/${movie.id}/cast`,
-                state: {
-                  from: {
-                    location,
-                  },
-                },
-              }}
-            >
-              Cast
-            </Link>
+            <Link to="cast">Cast</Link>
           </li>
           <li>
             <Link
-              to={{
-                pathname: `/${movie.id}/reviews`,
-                state: {
-                  from: {
-                    location,
-                  },
-                },
-              }}
+              to="reviews"
             >
               Reviews
             </Link>

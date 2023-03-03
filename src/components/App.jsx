@@ -3,8 +3,8 @@ import { Home } from '../pages/Home';
 import { Movies } from '../pages/Movies';
 import MovieDetails from '../pages/MovieDetails';
 import { SharedLayout } from './SharedLayout';
-import { Cast } from './Cast';
-import { Reviews } from './Reviews';
+import Cast from './Cast';
+import Reviews from './Reviews';
 
 export const App = () => {
   return (

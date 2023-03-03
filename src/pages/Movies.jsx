@@ -1,47 +1,87 @@
-import SearchBox from 'components/SearchBox/SearchBox';
-import MoviesList from 'components/MoviesList';
-import MovieDetails from '../pages/MovieDetails';
+import { Form, Input } from './Movies.styled';
 import { useState, useEffect } from 'react';
-
-const API_KEY = '5fcd4365d493d0f97c8c4d9a62c7577d';
-const API_URL = 'https://api.themoviedb.org/3/search/movie';
+import { searchMovies } from 'components/fetchAPI';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export const Movies = () => {
-  const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [movieToFind, setMovieToFind] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const searchMovies = async () => {
-      const response = await fetch(
-        `${API_URL}?api_key=${API_KEY}&query=${query}`
-      );
-      const data = await response.json();
-      setMovies(data.results);
-    };
+    const searchString = new URLSearchParams(location.search).get('query');
+    console.log('searchString:', searchString);
 
-    if (query !== '') {
-      searchMovies();
+    if (searchString) {
+      const getMovies = async () => {
+        const { results } = await searchMovies(searchString);
+
+        setMovies(results);
+        setMovieToFind(searchString);
+
+        console.log(searchString);
+      };
+
+      getMovies();
     }
+  }, [location.search]);
 
-    if (query === '') {
-      searchMovies('');
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    if (movieToFind.trim()) {
+      const { results } = await searchMovies(movieToFind);
+
+      setMovies(results);
+      setMovieToFind('');
+
+      if (results.length === 0) {
+        alert('There is no such movie');
+      }
+      console.log('results:', results);
+      navigate({
+        pathname: '/movies',
+        search: `/?query=${movieToFind}`,
+        state: { from: location },
+      });
     }
-  }, [query]);
-
-  const handleMovieClick = movie => {
-    setSelectedMovie(movie);
   };
+
+  console.log('movie to find:', movieToFind);
+  console.log('movies:', movies);
 
   return (
     <div>
-      <SearchBox query={query} setQuery={setQuery} />
-      {selectedMovie ? (
-        <MovieDetails movie={selectedMovie} />
-      ) : movies.length > 0 ? (
-        <MoviesList movies={movies} onMovieClick={handleMovieClick} />
-      ) : (
-        <h2>No results found</h2>
+      <Form onSubmit={handleSubmit}>
+        <Input
+          type="text"
+          value={movieToFind}
+          onChange={event => setMovieToFind(event.target.value)}
+          placeholder="Search movie"
+        />
+        <button type="submit">Search</button>
+      </Form>
+
+      {movies && movies.length > 0 && (
+        <ul>
+          {movies.map(({ id, title }) => (
+            <li key={id}>
+              <Link
+                to={{
+                  pathname: `/movies/${`${id}`}`,
+                  state: {
+                    from: {
+                      location,
+                    },
+                  },
+                }}
+              >
+                <p>{title}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
