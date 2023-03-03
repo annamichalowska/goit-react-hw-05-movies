@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Items, Image } from './Cast.styled';
 import { useParams } from 'react-router-dom';
 import { getMovieCast, IMAGE_URL } from 'components/fetchAPI';
 
@@ -16,11 +18,11 @@ export default function Cast() {
   }, [movieId]);
 
   return (
-    <ul>
+    <Items>
       {cast &&
         cast.map(({ id, profile_path, name, character }) => (
           <li key={id}>
-            <img
+            <Image
               src={IMAGE_URL + profile_path}
               alt={name}
               width="100"
@@ -30,6 +32,10 @@ export default function Cast() {
             <p>Character: {character}</p>
           </li>
         ))}
-    </ul>
+    </Items>
   );
 }
+
+Cast.propTypes = {
+  movieId: PropTypes.string.isRequired,
+};

@@ -1,55 +1,36 @@
-import { Form, Input } from './Movies.styled';
+import { Form, Input, Button } from './Movies.styled';
 import { useState, useEffect } from 'react';
 import { searchMovies } from 'components/fetchAPI';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
 export const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [movieToFind, setMovieToFind] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
-  const navigate = useNavigate();
+
+  const query = searchParams.get('query');
 
   useEffect(() => {
-    const searchString = new URLSearchParams(location.search).get('query');
-    console.log('searchString:', searchString);
-
-    if (searchString) {
+    if (query) {
       const getMovies = async () => {
-        const { results } = await searchMovies(searchString);
-
+        const { results } = await searchMovies(query);
         setMovies(results);
-        setMovieToFind(searchString);
-
-        console.log(searchString);
+        if (results.length === 0) {
+          return alert('There is no such movie');
+        }
       };
-
       getMovies();
     }
-  }, [location.search]);
-
-  const handleSubmit = async e => {
-    e.preventDefault();
-
-    if (movieToFind.trim()) {
-      const { results } = await searchMovies(movieToFind);
-
-      setMovies(results);
-      setMovieToFind('');
-
-      if (results.length === 0) {
-        alert('There is no such movie');
-      }
-      console.log('results:', results);
-      navigate({
-        pathname: '/movies',
-        search: `/?query=${movieToFind}`,
-        state: { from: location },
-      });
+    if (query === '') {
+      alert('Your query is empty');
     }
-  };
+  }, [query]);
 
-  console.log('movie to find:', movieToFind);
-  console.log('movies:', movies);
+  const handleSubmit = event => {
+    event.preventDefault();
+    setSearchParams({ query: movieToFind });
+  };
 
   return (
     <div>
@@ -60,7 +41,7 @@ export const Movies = () => {
           onChange={event => setMovieToFind(event.target.value)}
           placeholder="Search movie"
         />
-        <button type="submit">Search</button>
+        <Button type="submit">Search</Button>
       </Form>
 
       {movies && movies.length > 0 && (
@@ -86,3 +67,5 @@ export const Movies = () => {
     </div>
   );
 };
+
+Movies.displayName = 'Movies';

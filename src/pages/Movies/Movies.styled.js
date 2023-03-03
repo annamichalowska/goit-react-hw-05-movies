@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-//import { HiSearch } from 'react-icons/hi';
 
-export const Form = styled.div`
+export const Form = styled.form`
   display: inline-flex;
   align-items: center;
   position: relative;
@@ -16,19 +15,19 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-  background-color: white;
-  border: 2px solid black;
+  background-color: grey;
   border-radius: 4px;
-  color: black;
+  color: white;
   padding: 8px 15px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
   margin-left: 10px;
+  font-weight: 500;
   cursor: pointer;
   &:hover {
     background-color: orangered;
-    color: white;
+    color: black;
   }
 `;
