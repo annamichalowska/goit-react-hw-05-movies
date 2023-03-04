@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { searchMovies } from 'components/fetchAPI';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
-export const Movies = () => {
+const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [movieToFind, setMovieToFind] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
@@ -69,3 +69,5 @@ export const Movies = () => {
 };
 
 Movies.displayName = 'Movies';
+
+export default Movies;
