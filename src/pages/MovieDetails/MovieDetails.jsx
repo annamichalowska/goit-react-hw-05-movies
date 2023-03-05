@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
+import { Link, Outlet, useParams } from 'react-router-dom';
 import { Image, Container } from './MovieDetails.styled';
 import { Suspense } from 'react';
 import { BackLink } from '../../components/BackLink';
@@ -6,8 +6,6 @@ import { useState, useEffect } from 'react';
 import { getMovieDetails, IMAGE_URL } from 'components/fetchAPI';
 
 function MovieDetails() {
-  const location = useLocation();
-  const backLinkHref = location.state?.from ?? '/movies/';
   const [movie, setMovie] = useState(null);
   const { movieId } = useParams();
 
@@ -27,7 +25,7 @@ function MovieDetails() {
         <div>This movie is not found</div>
       ) : (
         <>
-          <BackLink to={backLinkHref}>Go back</BackLink>
+          <BackLink>Go back</BackLink>
           <Container>
             <Image src={IMAGE_URL + movie.poster_path} alt={movie.title} />
 

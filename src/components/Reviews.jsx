@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { getMovieReviews } from 'components/fetchAPI';
 
 export default function Reviews() {
@@ -33,7 +32,3 @@ export default function Reviews() {
     </div>
   );
 }
-
-Reviews.propTypes = {
-  movieId: PropTypes.string.isRequired,
-};
